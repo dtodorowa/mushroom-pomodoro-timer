@@ -1,0 +1,563 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+.pomodoro-app {
+    font-family: 'Press Start 2P', monospace;
+    background: linear-gradient(180deg, #c3a3cc 0%, #ffb5c5 50%, #ffd4a3 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+/* Floating clouds */
+.cloud {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+.cloud::before {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+}
+
+.cloud1 {
+    width: 100px;
+    height: 40px;
+    top: 20%;
+    animation: float 20s infinite;
+}
+
+.cloud1::before {
+    width: 50px;
+    height: 50px;
+    top: -25px;
+    left: 10px;
+}
+
+.cloud2 {
+    width: 80px;
+    height: 35px;
+    top: 60%;
+    animation: float 25s infinite reverse;
+}
+
+.cloud2::before {
+    width: 60px;
+    height: 40px;
+    top: -20px;
+    right: 15px;
+}
+
+@keyframes float {
+    from { transform: translateX(-100px); }
+    to { transform: translateX(calc(100vw + 100px)); }
+}
+
+.container {
+    background: #e8d5f2;
+    border: 4px solid #9b7aa8;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 
+        0 0 0 4px #e8d5f2,
+        0 0 0 8px #9b7aa8,
+        0 20px 40px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 10;
+    max-width: 400px;
+    width: 100%;
+}
+
+.window-header {
+    background: linear-gradient(90deg, #b8a3d0 0%, #d4b5e0 100%);
+    margin: -30px -30px 20px -30px;
+    padding: 12px 20px;
+    border-bottom: 4px solid #9b7aa8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 12px 12px 0 0;
+}
+
+.window-title {
+    color: #5a4a6a;
+    font-size: 12px;
+    text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.3);
+}
+
+.window-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.window-btn {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #5a4a6a;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.window-btn:hover {
+    transform: scale(1.1);
+}
+
+.window-btn.minimize { background: #ffd93d; }
+.window-btn.maximize { background: #6dd47e; }
+.window-btn.close { background: #ff6b6b; }
+
+.mushroom-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    position: relative;
+}
+
+.mushroom {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    animation: bob 2s infinite ease-in-out;
+}
+
+@keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.mushroom-cap {
+    width: 100px;
+    height: 60px;
+    background: linear-gradient(180deg, #87ceeb 0%, #6bb6d6 100%);
+    border: 3px solid #5a9ab8;
+    border-radius: 50px 50px 10px 10px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.mushroom-spots {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 2px solid #5a9ab8;
+    border-radius: 50%;
+    top: 15px;
+    left: 20px;
+}
+
+.mushroom-spots::before,
+.mushroom-spots::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border: 2px solid #5a9ab8;
+    border-radius: 50%;
+}
+
+.mushroom-spots::before {
+    width: 15px;
+    height: 15px;
+    top: 5px;
+    left: 35px;
+}
+
+.mushroom-spots::after {
+    width: 12px;
+    height: 12px;
+    top: 20px;
+    left: 25px;
+}
+
+.mushroom-face {
+    width: 70px;
+    height: 50px;
+    background: #ffd4a3;
+    border: 3px solid #5a9ab8;
+    border-radius: 0 0 35px 35px;
+    margin: -5px auto 0;
+    position: relative;
+}
+
+.mushroom-eyes {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 6px;
+    height: 6px;
+    background: #333;
+    border-radius: 50%;
+}
+
+.mushroom-eyes::after {
+    content: '';
+    position: absolute;
+    left: 25px;
+    width: 6px;
+    height: 6px;
+    background: #333;
+    border-radius: 50%;
+}
+
+.mushroom-mouth {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 8px;
+    border-bottom: 3px solid #333;
+    border-radius: 0 0 15px 15px;
+}
+
+.timer-display {
+    background: #f5e6ff;
+    border: 4px solid #9b7aa8;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    margin: 20px 0;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.timer-text {
+    font-size: 32px;
+    color: #5a4a6a;
+    text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.5);
+    letter-spacing: 2px;
+}
+
+.timer-label {
+    font-size: 10px;
+    color: #8a7a9a;
+    margin-top: 10px;
+    text-transform: uppercase;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.btn {
+    background: linear-gradient(180deg, #ffb5c5 0%, #ff9aaf 100%);
+    border: 3px solid #d47a8a;
+    color: white;
+    padding: 12px 20px;
+    font-size: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    font-family: 'Press Start 2P', monospace;
+    position: relative;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 #d47a8a;
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 0 #d47a8a;
+}
+
+.btn.secondary {
+    background: linear-gradient(180deg, #b8a3d0 0%, #9b7aa8 100%);
+    border-color: #7a5a8a;
+}
+
+.btn.secondary:hover {
+    box-shadow: 0 4px 0 #7a5a8a;
+}
+
+.mode-selector {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.mode-btn {
+    background: #f5e6ff;
+    border: 3px solid #d4b5e0;
+    padding: 10px 15px;
+    font-size: 9px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Press Start 2P', monospace;
+    color: #8a7a9a;
+}
+
+.mode-btn.active {
+    background: linear-gradient(180deg, #87ceeb 0%, #6bb6d6 100%);
+    border-color: #5a9ab8;
+    color: white;
+    transform: scale(1.05);
+}
+
+.progress-bar {
+    background: #f5e6ff;
+    border: 3px solid #9b7aa8;
+    border-radius: 20px;
+    height: 30px;
+    margin: 20px 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #87ceeb 0%, #6bb6d6 50%, #87ceeb 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+    transition: width 1s ease;
+    border-radius: 17px;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px dashed #d4b5e0;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 16px;
+    color: #5a4a6a;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 8px;
+    color: #8a7a9a;
+    text-transform: uppercase;
+}
+
+.sparkles {
+    position: absolute;
+    pointer-events: none;
+}
+
+.sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    animation: sparkle 1s infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0; transform: scale(0); }
+    50% { opacity: 1; transform: scale(1); }
+}
+
+/* Schedule Window Styles */
+.clock-display {
+    background: linear-gradient(180deg, #2a2a3e 0%, #3a3a5e 100%);
+    border: 4px solid #9b7aa8;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    margin: 20px 0;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.digital-clock {
+    font-size: 28px;
+    color: #6dd47e;
+    text-shadow: 0 0 10px rgba(109, 212, 126, 0.5);
+    letter-spacing: 3px;
+    font-family: 'Press Start 2P', monospace;
+}
+
+.date-display {
+    font-size: 9px;
+    color: #87ceeb;
+    margin-top: 10px;
+    text-transform: uppercase;
+}
+
+.current-activity {
+    background: #f5e6ff;
+    border: 4px solid #9b7aa8;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.activity-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+    animation: float-icon 3s infinite ease-in-out;
+}
+
+@keyframes float-icon {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-5px) scale(1.1); }
+}
+
+.activity-label {
+    font-size: 8px;
+    color: #8a7a9a;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.activity-name {
+    font-size: 11px;
+    color: #5a4a6a;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.activity-progress {
+    margin-top: 10px;
+}
+
+.activity-progress-bar {
+    background: #e8d5f2;
+    border: 2px solid #9b7aa8;
+    border-radius: 10px;
+    height: 20px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.activity-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6dd47e 0%, #87ceeb 100%);
+    transition: width 1s linear;
+    border-radius: 8px;
+}
+
+.activity-timer {
+    font-size: 10px;
+    color: #8a7a9a;
+}
+
+.next-activity {
+    background: linear-gradient(180deg, #d4b5e0 0%, #e8d5f2 100%);
+    border: 3px solid #9b7aa8;
+    border-radius: 10px;
+    padding: 12px;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.next-label {
+    font-size: 8px;
+    color: #8a7a9a;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.next-name {
+    font-size: 10px;
+    color: #5a4a6a;
+    margin-bottom: 5px;
+}
+
+.next-time {
+    font-size: 12px;
+    color: #ff9aaf;
+    font-weight: bold;
+}
+
+.day-progress {
+    margin: 20px 0;
+}
+
+.day-label {
+    font-size: 9px;
+    color: #8a7a9a;
+    text-align: center;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.pomodoro-count {
+    font-size: 10px;
+    color: #5a4a6a;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.day-progress-bar {
+    background: #f5e6ff;
+    border: 3px solid #9b7aa8;
+    border-radius: 15px;
+    height: 25px;
+    overflow: hidden;
+}
+
+.day-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffb5c5 0%, #ff9aaf 50%, #d47a8a 100%);
+    transition: width 1s ease;
+    border-radius: 12px;
+}
+
+.schedule-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px dashed #d4b5e0;
+}
+
+.schedule-stat {
+    text-align: center;
+}
+
+.schedule-icon {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.schedule-stat-value {
+    font-size: 10px;
+    color: #5a4a6a;
+    margin-bottom: 3px;
+}
+
+.schedule-stat-label {
+    font-size: 7px;
+    color: #8a7a9a;
+    text-transform: uppercase;
+}

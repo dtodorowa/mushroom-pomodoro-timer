@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Pomodoro Timer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        
+        body {
+            font-family: 'Press Start 2P', monospace;
+            background: linear-gradient(180deg, #c3a3cc 0%, #ffb5c5 50%, #ffd4a3 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        /* Floating clouds */
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            opacity: 0.7;
+        }
+        
+        .cloud::before {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+        }
+        
+        .cloud1 {
+            width: 100px;
+            height: 40px;
+            top: 20%;
+            animation: float 20s infinite;
+        }
+        
+        .cloud1::before {
+            width: 50px;
+            height: 50px;
+            top: -25px;
+            left: 10px;
+        }
+        
+        .cloud2 {
+            width: 80px;
+            height: 35px;
+            top: 60%;
+            animation: float 25s infinite reverse;
+        }
+        
+        .cloud2::before {
+            width: 60px;
+            height: 40px;
+            top: -20px;
+            right: 15px;
+        }
+        
+        @keyframes float {
+            from { transform: translateX(-100px); }
+            to { transform: translateX(calc(100vw + 100px)); }
+        }
+        
+        .container {
+            background: #e8d5f2;
+            border: 4px solid #9b7aa8;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 
+                0 0 0 4px #e8d5f2,
+                0 0 0 8px #9b7aa8,
+                0 20px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 10;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .window-header {
+            background: linear-gradient(90deg, #b8a3d0 0%, #d4b5e0 100%);
+            margin: -30px -30px 20px -30px;
+            padding: 12px 20px;
+            border-bottom: 4px solid #9b7aa8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .window-title {
+            color: #5a4a6a;
+            font-size: 12px;
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.3);
+        }
+        
+        .window-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .window-btn {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #5a4a6a;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .window-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .window-btn.minimize { background: #ffd93d; }
+        .window-btn.maximize { background: #6dd47e; }
+        .window-btn.close { background: #ff6b6b; }
+        
+        .mushroom-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .mushroom {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            animation: bob 2s infinite ease-in-out;
+        }
+        
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .mushroom-cap {
+            width: 100px;
+            height: 60px;
+            background: linear-gradient(180deg, #87ceeb 0%, #6bb6d6 100%);
+            border: 3px solid #5a9ab8;
+            border-radius: 50px 50px 10px 10px;
+            position: relative;
+            margin: 0 auto;
+        }
+        
+        .mushroom-spots {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 2px solid #5a9ab8;
+            border-radius: 50%;
+            top: 15px;
+            left: 20px;
+        }
+        
+        .mushroom-spots::before,
+        .mushroom-spots::after {
+            content: '';
+            position: absolute;
+            background: white;
+            border: 2px solid #5a9ab8;
+            border-radius: 50%;
+        }
+        
+        .mushroom-spots::before {
+            width: 15px;
+            height: 15px;
+            top: 5px;
+            left: 35px;
+        }
+        
+        .mushroom-spots::after {
+            width: 12px;
+            height: 12px;
+            top: 20px;
+            left: 25px;
+        }
+        
+        .mushroom-face {
+            width: 70px;
+            height: 50px;
+            background: #ffd4a3;
+            border: 3px solid #5a9ab8;
+            border-radius: 0 0 35px 35px;
+            margin: -5px auto 0;
+            position: relative;
+        }
+        
+        .mushroom-eyes {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 6px;
+            height: 6px;
+            background: #333;
+            border-radius: 50%;
+        }
+        
+        .mushroom-eyes::after {
+            content: '';
+            position: absolute;
+            left: 25px;
+            width: 6px;
+            height: 6px;
+            background: #333;
+            border-radius: 50%;
+        }
+        
+        .mushroom-mouth {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 8px;
+            border-bottom: 3px solid #333;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        .timer-display {
+            background: #f5e6ff;
+            border: 4px solid #9b7aa8;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timer-text {
+            font-size: 32px;
+            color: #5a4a6a;
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .timer-label {
+            font-size: 10px;
+            color: #8a7a9a;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            background: linear-gradient(180deg, #ffb5c5 0%, #ff9aaf 100%);
+            border: 3px solid #d47a8a;
+            color: white;
+            padding: 12px 20px;
+            font-size: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            font-family: 'Press Start 2P', monospace;
+            position: relative;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 0 #d47a8a;
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 0 #d47a8a;
+        }
+        
+        .btn.secondary {
+            background: linear-gradient(180deg, #b8a3d0 0%, #9b7aa8 100%);
+            border-color: #7a5a8a;
+        }
+        
+        .btn.secondary:hover {
+            box-shadow: 0 4px 0 #7a5a8a;
+        }
+        
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .mode-btn {
+            background: #f5e6ff;
+            border: 3px solid #d4b5e0;
+            padding: 10px 15px;
+            font-size: 9px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Press Start 2P', monospace;
+            color: #8a7a9a;
+        }
+        
+        .mode-btn.active {
+            background: linear-gradient(180deg, #87ceeb 0%, #6bb6d6 100%);
+            border-color: #5a9ab8;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .progress-bar {
+            background: #f5e6ff;
+            border: 3px solid #9b7aa8;
+            border-radius: 20px;
+            height: 30px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #87ceeb 0%, #6bb6d6 50%, #87ceeb 100%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+            transition: width 1s ease;
+            border-radius: 17px;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed #d4b5e0;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 16px;
+            color: #5a4a6a;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 8px;
+            color: #8a7a9a;
+            text-transform: uppercase;
+        }
+        
+        .sparkles {
+            position: absolute;
+            pointer-events: none;
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            animation: sparkle 1s infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        
+        /* Schedule Window Styles */
+        .clock-display {
+            background: linear-gradient(180deg, #2a2a3e 0%, #3a3a5e 100%);
+            border: 4px solid #9b7aa8;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .digital-clock {
+            font-size: 28px;
+            color: #6dd47e;
+            text-shadow: 0 0 10px rgba(109, 212, 126, 0.5);
+            letter-spacing: 3px;
+            font-family: 'Press Start 2P', monospace;
+        }
+        
+        .date-display {
+            font-size: 9px;
+            color: #87ceeb;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+        
+        .current-activity {
+            background: #f5e6ff;
+            border: 4px solid #9b7aa8;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .activity-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+            animation: float-icon 3s infinite ease-in-out;
+        }
+        
+        @keyframes float-icon {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-5px) scale(1.1); }
+        }
+        
+        .activity-label {
+            font-size: 8px;
+            color: #8a7a9a;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .activity-name {
+            font-size: 11px;
+            color: #5a4a6a;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .activity-progress {
+            margin-top: 10px;
+        }
+        
+        .activity-progress-bar {
+            background: #e8d5f2;
+            border: 2px solid #9b7aa8;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .activity-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6dd47e 0%, #87ceeb 100%);
+            transition: width 1s linear;
+            border-radius: 8px;
+        }
+        
+        .activity-timer {
+            font-size: 10px;
+            color: #8a7a9a;
+        }
+        
+        .next-activity {
+            background: linear-gradient(180deg, #d4b5e0 0%, #e8d5f2 100%);
+            border: 3px solid #9b7aa8;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .next-label {
+            font-size: 8px;
+            color: #8a7a9a;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .next-name {
+            font-size: 10px;
+            color: #5a4a6a;
+            margin-bottom: 5px;
+        }
+        
+        .next-time {
+            font-size: 12px;
+            color: #ff9aaf;
+            font-weight: bold;
+        }
+        
+        .day-progress {
+            margin: 20px 0;
+        }
+        
+        .day-label {
+            font-size: 9px;
+            color: #8a7a9a;
+            text-align: center;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        
+        .pomodoro-count {
+            font-size: 10px;
+            color: #5a4a6a;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .day-progress-bar {
+            background: #f5e6ff;
+            border: 3px solid #9b7aa8;
+            border-radius: 15px;
+            height: 25px;
+            overflow: hidden;
+        }
+        
+        .day-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffb5c5 0%, #ff9aaf 50%, #d47a8a 100%);
+            transition: width 1s ease;
+            border-radius: 12px;
+        }
+        
+        .schedule-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed #d4b5e0;
+        }
+        
+        .schedule-stat {
+            text-align: center;
+        }
+        
+        .schedule-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .schedule-stat-value {
+            font-size: 10px;
+            color: #5a4a6a;
+            margin-bottom: 3px;
+        }
+        
+        .schedule-stat-label {
+            font-size: 7px;
+            color: #8a7a9a;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    
+    <div class="container" id="timer-window">
+        <div class="window-header">
+            <div class="window-title">Pomodoro Timer</div>
+            <div class="window-buttons">
+                <div class="window-btn minimize"></div>
+                <div class="window-btn maximize"></div>
+                <div class="window-btn close"></div>
+            </div>
+        </div>
+        
+        <div class="mushroom-container">
+            <div class="mushroom" id="mushroom">
+                <div class="mushroom-cap">
+                    <div class="mushroom-spots"></div>
+                </div>
+                <div class="mushroom-face">
+                    <div class="mushroom-eyes"></div>
+                    <div class="mushroom-mouth"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="pomodoro">Work</button>
+            <button class="mode-btn" data-mode="short">Short</button>
+            <button class="mode-btn" data-mode="long">Long</button>
+        </div>
+        
+        <div class="timer-display">
+            <div class="timer-text" id="timer">25:00</div>
+            <div class="timer-label" id="timer-label">Ready to focus!</div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress" style="width: 0%"></div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="startBtn">Start</button>
+            <button class="btn secondary" id="pauseBtn" style="display: none;">Pause</button>
+            <button class="btn secondary" id="resetBtn">Reset</button>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="todayPomodoros">0</div>
+                <div class="stat-label">Today</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="totalPomodoros">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="streak">0</div>
+                <div class="stat-label">Streak</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Schedule Clock Window -->
+    <div class="container" id="schedule-window">
+        <div class="window-header">
+            <div class="window-title">Daily Schedule</div>
+            <div class="window-buttons">
+                <div class="window-btn minimize"></div>
+                <div class="window-btn maximize"></div>
+                <div class="window-btn close"></div>
+            </div>
+        </div>
+        
+        <div class="clock-display">
+            <div class="digital-clock" id="digital-clock">00:00:00</div>
+            <div class="date-display" id="date-display">Monday, January 1</div>
+        </div>
+        
+        <div class="current-activity">
+            <div class="activity-icon" id="activity-icon">🍄</div>
+            <div class="activity-label">Current Activity</div>
+            <div class="activity-name" id="current-activity">Loading...</div>
+            <div class="activity-progress">
+                <div class="activity-progress-bar">
+                    <div class="activity-progress-fill" id="activity-progress"></div>
+                </div>
+                <div class="activity-timer" id="activity-timer">00:00</div>
+            </div>
+        </div>
+        
+        <div class="next-activity">
+            <div class="next-label">Next Up</div>
+            <div class="next-name" id="next-activity">Loading...</div>
+            <div class="next-time" id="next-time">in 00:00</div>
+        </div>
+        
+        <div class="day-progress">
+            <div class="day-label">Day Progress</div>
+            <div class="pomodoro-count">
+                <span id="completed-pomodoros">0</span> / <span id="total-day-pomodoros">32</span> pomodoros
+            </div>
+            <div class="day-progress-bar">
+                <div class="day-progress-fill" id="day-progress"></div>
+            </div>
+        </div>
+        
+        <div class="schedule-stats">
+            <div class="schedule-stat">
+                <div class="schedule-icon">☀️</div>
+                <div class="schedule-stat-value" id="morning-count">0/6</div>
+                <div class="schedule-stat-label">Morning</div>
+            </div>
+            <div class="schedule-stat">
+                <div class="schedule-icon">🍽️</div>
+                <div class="schedule-stat-value" id="work-count">0/14</div>
+                <div class="schedule-stat-label">Work</div>
+            </div>
+            <div class="schedule-stat">
+                <div class="schedule-icon">🌙</div>
+                <div class="schedule-stat-value" id="evening-count">0/14</div>
+                <div class="schedule-stat-label">Evening</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Timer settings
+        const TIMER_MODES = {
+            pomodoro: { minutes: 25, label: 'Focus Time!', color: '#87ceeb' },
+            short: { minutes: 5, label: 'Short Break', color: '#ffb5c5' },
+            long: { minutes: 15, label: 'Long Break', color: '#b8a3d0' }
+        };
+        
+        let currentMode = 'pomodoro';
+        let timeLeft = TIMER_MODES[currentMode].minutes * 60;
+        let totalTime = timeLeft;
+        let isRunning = false;
+        let isPaused = false;
+        let interval = null;
+        
+        // Stats
+        let stats = {
+            today: 0,
+            total: parseInt(localStorage.getItem('totalPomodoros') || 0),
+            streak: parseInt(localStorage.getItem('streak') || 0)
+        };
+        
+        // Elements
+        const timerDisplay = document.getElementById('timer');
+        const timerLabel = document.getElementById('timer-label');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const progressBar = document.getElementById('progress');
+        const mushroom = document.getElementById('mushroom');
+        const modeBtns = document.querySelectorAll('.mode-btn');
+        
+        // Mode selection
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (!isRunning) {
+                    modeBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentMode = btn.dataset.mode;
+                    resetTimer();
+                    updateMushroom();
+                }
+            });
+        });
+        
+        // Update mushroom appearance based on mode
+        function updateMushroom() {
+            const cap = mushroom.querySelector('.mushroom-cap');
+            const mode = TIMER_MODES[currentMode];
+            cap.style.background = `linear-gradient(180deg, ${mode.color} 0%, ${adjustColor(mode.color, -20)} 100%)`;
+        }
+        
+        // Helper function to adjust color brightness
+        function adjustColor(color, amount) {
+            const hex = color.replace('#', '');
+            const num = parseInt(hex, 16);
+            const r = Math.min(255, Math.max(0, (num >> 16) + amount));
+            const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amount));
+            const b = Math.min(255, Math.max(0, (num & 0x0000FF) + amount));
+            return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+        }
+        
+        // Format time
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // Update display
+        function updateDisplay() {
+            timerDisplay.textContent = formatTime(timeLeft);
+            const progress = ((totalTime - timeLeft) / totalTime) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+        
+        // Start timer
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                isPaused = false;
+                startBtn.style.display = 'none';
+                pauseBtn.style.display = 'inline-block';
+                timerLabel.textContent = TIMER_MODES[currentMode].label;
+                
+                // Add animation to mushroom
+                mushroom.style.animation = 'bob 1s infinite ease-in-out';
+                
+                interval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateDisplay();
+                    } else {
+                        completeTimer();
+                    }
+                }, 1000);
+            }
+        }
+        
+        // Pause timer
+        function pauseTimer() {
+            if (isRunning && !isPaused) {
+                isPaused = true;
+                clearInterval(interval);
+                pauseBtn.textContent = 'Resume';
+                timerLabel.textContent = 'Paused';
+                mushroom.style.animationPlayState = 'paused';
+            } else if (isRunning && isPaused) {
+                isPaused = false;
+                pauseBtn.textContent = 'Pause';
+                timerLabel.textContent = TIMER_MODES[currentMode].label;
+                mushroom.style.animationPlayState = 'running';
+                startTimer();
+            }
+        }
+        
+        // Reset timer
+        function resetTimer() {
+            clearInterval(interval);
+            isRunning = false;
+            isPaused = false;
+            timeLeft = TIMER_MODES[currentMode].minutes * 60;
+            totalTime = timeLeft;
+            updateDisplay();
+            startBtn.style.display = 'inline-block';
+            pauseBtn.style.display = 'none';
+            pauseBtn.textContent = 'Pause';
+            timerLabel.textContent = 'Ready to focus!';
+            mushroom.style.animation = 'bob 2s infinite ease-in-out';
+        }
+        
+        // Complete timer
+        function completeTimer() {
+            clearInterval(interval);
+            isRunning = false;
+            
+            // Update stats if it was a pomodoro
+            if (currentMode === 'pomodoro') {
+                stats.today++;
+                stats.total++;
+                stats.streak++;
+                localStorage.setItem('totalPomodoros', stats.total);
+                localStorage.setItem('streak', stats.streak);
+                updateStats();
+                
+                // Celebration animation
+                celebrate();
+            }
+            
+            // Play notification sound
+            playNotification();
+            
+            // Show completion message
+            timerLabel.textContent = 'Complete! 🎉';
+            
+            // Auto switch to break
+            setTimeout(() => {
+                if (currentMode === 'pomodoro') {
+                    // Switch to short break
+                    modeBtns.forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-mode="short"]').classList.add('active');
+                    currentMode = 'short';
+                } else {
+                    // Switch back to pomodoro
+                    modeBtns.forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-mode="pomodoro"]').classList.add('active');
+                    currentMode = 'pomodoro';
+                }
+                resetTimer();
+                updateMushroom();
+            }, 3000);
+        }
+        
+        // Update stats display
+        function updateStats() {
+            document.getElementById('todayPomodoros').textContent = stats.today;
+            document.getElementById('totalPomodoros').textContent = stats.total;
+            document.getElementById('streak').textContent = stats.streak;
+        }
+        
+        // Celebration animation
+        function celebrate() {
+            // Create sparkles
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    createSparkle();
+                }, i * 100);
+            }
+            
+            // Happy mushroom animation
+            const mouth = mushroom.querySelector('.mushroom-mouth');
+            mouth.style.borderRadius = '15px 15px 0 0';
+            mouth.style.borderBottom = 'none';
+            mouth.style.borderTop = '3px solid #333';
+            setTimeout(() => {
+                mouth.style.borderRadius = '0 0 15px 15px';
+                mouth.style.borderTop = 'none';
+                mouth.style.borderBottom = '3px solid #333';
+            }, 2000);
+        }
+        
+        // Create sparkle effect
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.animationDelay = Math.random() * 0.5 + 's';
+            document.querySelector('.mushroom-container').appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 1000);
+        }
+        
+        // Play notification sound (simple beep)
+        function playNotification() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+        
+        // Event listeners
+        startBtn.addEventListener('click', startTimer);
+        pauseBtn.addEventListener('click', pauseTimer);
+        resetBtn.addEventListener('click', resetTimer);
+        
+        // Initialize
+        updateDisplay();
+        updateStats();
+        updateMushroom();
+        
+        // Check for saved date and reset daily stats if needed
+        const today = new Date().toDateString();
+        const savedDate = localStorage.getItem('lastDate');
+        if (savedDate !== today) {
+            stats.today = 0;
+            localStorage.setItem('lastDate', today);
+            if (savedDate && new Date(savedDate).getTime() < Date.now() - 86400000) {
+                stats.streak = 0;
+                localStorage.setItem('streak', 0);
+            }
+        }
+        
+        // Schedule Clock Functionality
+        const schedule = [
+            // Early Morning (6:00 - 8:10)
+            { start: "06:00", end: "06:25", type: "pomodoro", name: "Morning Focus 1", icon: "🌅" },
+            { start: "06:25", end: "06:30", type: "break", name: "Short Break", icon: "☕" },
+            { start: "06:30", end: "06:55", type: "pomodoro", name: "Morning Focus 2", icon: "🌅" },
+            { start: "06:55", end: "07:00", type: "break", name: "Short Break", icon: "☕" },
+            
+            // Pre-Work (7:00 - 10:20)
+            { start: "07:00", end: "07:25", type: "pomodoro", name: "Morning Focus 3", icon: "🌅" },
+            { start: "07:25", end: "07:30", type: "break", name: "Short Break", icon: "☕" },
+            { start: "07:30", end: "07:55", type: "pomodoro", name: "Morning Focus 4", icon: "🌅" },
+            { start: "07:55", end: "08:10", type: "break", name: "Long Break", icon: "🌸" },
+            { start: "08:10", end: "08:35", type: "pomodoro", name: "Prep Focus 1", icon: "📚" },
+            { start: "08:35", end: "08:40", type: "break", name: "Short Break", icon: "☕" },
+            { start: "08:40", end: "09:05", type: "pomodoro", name: "Prep Focus 2", icon: "📚" },
+            
+            // Go to work
+            { start: "09:05", end: "09:10", type: "break", name: "Short Break", icon: "☕" },
+           
+            // Work Morning (9:10 - 11:50)
+            { start: "09:10", end: "09:35", type: "pomodoro", name: "Work Block 1", icon: "💼" },
+            { start: "09:35", end: "09:40", type: "break", name: "Short Break", icon: "☕" },
+            { start: "09:40", end: "10:05", type: "pomodoro", name: "Work Block 2", icon: "💼" },
+            { start: "10:05", end: "10:20", type: "break", name: "Long Break", icon: "🌸" },
+            
+            { start: "10:20", end: "10:45", type: "pomodoro", name: "Work Block 3", icon: "💼" },
+            { start: "10:45", end: "10:50", type: "break", name: "Short Break", icon: "☕" },
+            { start: "10:50", end: "11:15", type: "pomodoro", name: "Work Block 4", icon: "💼" },
+            { start: "11:15", end: "11:20", type: "break", name: "Short Break", icon: "☕" },
+            { start: "11:20", end: "11:45", type: "pomodoro", name: "Work Block 5", icon: "💼" },
+            { start: "11:45", end: "11:50", type: "break", name: "Short Break", icon: "☕" },
+            
+            // Lunch
+            { start: "11:50", end: "12:15", type: "pomodoro", name: "Work Block 6", icon: "💼" },
+            { start: "12:15", end: "12:30", type: "break", name: "Long Break", icon: "🌸" },
+            { start: "12:30", end: "12:55", type: "pomodoro", name: "Work Block 7", icon: "💼" },
+            { start: "12:55", end: "13:00", type: "break", name: "Short Break", icon: "☕" },
+            
+            // Work Afternoon (13:00 - 14:40)
+            { start: "13:00", end: "13:25", type: "pomodoro", name: "Work Block 8", icon: "💼" },
+            { start: "13:25", end: "13:30", type: "break", name: "Short Break", icon: "☕" },
+            { start: "13:30", end: "13:55", type: "pomodoro", name: "Work Block 9", icon: "💼" },
+            { start: "13:55", end: "14:00", type: "break", name: "Short Break", icon: "☕" },
+            { start: "14:00", end: "14:25", type: "pomodoro", name: "Work Block 10", icon: "💼" },
+            { start: "14:25", end: "14:40", type: "break", name: "Long Break", icon: "🌸" },
+            
+            // Work Late Afternoon (14:40 - 16:50)
+            { start: "14:40", end: "15:05", type: "pomodoro", name: "Work Block 11", icon: "💼" },
+            { start: "15:05", end: "15:10", type: "break", name: "Short Break", icon: "☕" },
+            { start: "15:10", end: "15:35", type: "pomodoro", name: "Work Block 12", icon: "💼" },
+            { start: "15:35", end: "15:40", type: "break", name: "Short Break", icon: "☕" },
+            { start: "15:40", end: "16:05", type: "pomodoro", name: "Work Block 13", icon: "💼" },
+            { start: "16:05", end: "16:10", type: "break", name: "Short Break", icon: "☕" },
+            { start: "16:10", end: "16:35", type: "pomodoro", name: "Work Block 14", icon: "💼" },
+            { start: "16:35", end: "16:50", type: "break", name: "Long Break", icon: "🌸" },
+            { start: "16:50", end: "17:15", type: "pomodoro", name: "Work Block 15", icon: "💼" },
+           
+            // Work End + Personal (17:15 - 19:00)
+            { start: "17:15", end: "17:20", type: "break", name: "Short Break", icon: "☕" },
+            { start: "17:20", end: "17:45", type: "pomodoro", name: "Personal Block 1", icon: "✨" },
+            { start: "17:45", end: "17:50", type: "break", name: "Short Break", icon: "☕" },
+            { start: "17:50", end: "18:15", type: "pomodoro", name: "Personal Block 2", icon: "✨" },
+            { start: "18:15", end: "18:20", type: "break", name: "Short Break", icon: "☕" },
+            { start: "18:20", end: "18:45", type: "pomodoro", name: "Personal Block 3", icon: "✨" },
+            { start: "18:45", end: "19:00", type: "break", name: "Long Break", icon: "🌸" },
+            
+            // Evening (19:00 - 21:10)
+            { start: "19:00", end: "19:25", type: "pomodoro", name: "Evening Block 1", icon: "🌆" },
+            { start: "19:25", end: "19:30", type: "break", name: "Short Break", icon: "☕" },
+            { start: "19:30", end: "19:55", type: "pomodoro", name: "Evening Block 2", icon: "🌆" },
+            { start: "19:55", end: "20:00", type: "break", name: "Short Break", icon: "☕" },
+            { start: "20:00", end: "20:25", type: "pomodoro", name: "Evening Block 3", icon: "🌆" },
+            { start: "20:25", end: "20:30", type: "break", name: "Short Break", icon: "☕" },
+            { start: "20:30", end: "20:55", type: "pomodoro", name: "Evening Block 4", icon: "🌆" },
+            { start: "20:55", end: "21:10", type: "break", name: "Long Break", icon: "🌸" },
+            
+            // Night (21:10 - 23:00)
+            { start: "21:10", end: "21:35", type: "pomodoro", name: "Night Focus 1", icon: "🌙" },
+            { start: "21:35", end: "21:40", type: "break", name: "Short Break", icon: "☕" },
+            { start: "21:40", end: "22:05", type: "pomodoro", name: "Night Focus 2", icon: "🌙" },
+            { start: "22:05", end: "22:10", type: "break", name: "Short Break", icon: "☕" },
+            { start: "22:10", end: "22:35", type: "pomodoro", name: "Night Focus 3", icon: "🌙" },
+            { start: "22:35", end: "22:40", type: "break", name: "Short Break", icon: "☕" },
+            { start: "22:40", end: "23:05", type: "pomodoro", name: "Night Focus 4", icon: "🌙" },
+            { start: "23:05", end: "06:00", type: "sleep", name: "Sleep", icon: "😴" }
+        ];
+        
+        // Convert time string to minutes
+        function timeToMinutes(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+        
+        // Get current activity
+        function getCurrentActivity() {
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            
+            for (let activity of schedule) {
+                const startMinutes = timeToMinutes(activity.start);
+                const endMinutes = timeToMinutes(activity.end);
+                
+                if (startMinutes <= currentMinutes && currentMinutes < endMinutes) {
+                    return activity;
+                }
+            }
+            
+            // Default to sleep if nothing matches
+            return schedule[schedule.length - 1];
+        }
+        
+        // Get next activity
+        function getNextActivity() {
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            
+            for (let i = 0; i < schedule.length; i++) {
+                const startMinutes = timeToMinutes(schedule[i].start);
+                if (startMinutes > currentMinutes) {
+                    return schedule[i];
+                }
+            }
+            
+            // Return first activity of next day
+            return schedule[0];
+        }
+        
+        // Calculate time remaining
+        function getTimeRemaining(targetTime) {
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            const targetMinutes = timeToMinutes(targetTime);
+            
+            let diff = targetMinutes - currentMinutes;
+            if (diff < 0) diff += 1440; // Add 24 hours if next day
+            
+            const hours = Math.floor(diff / 60);
+            const minutes = diff % 60;
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            }
+            return `${minutes}m`;
+        }
+        
+        // Calculate activity progress
+        function getActivityProgress(activity) {
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            const startMinutes = timeToMinutes(activity.start);
+            const endMinutes = timeToMinutes(activity.end);
+            
+            const elapsed = currentMinutes - startMinutes;
+            const total = endMinutes - startMinutes;
+            
+            return {
+                percentage: Math.min(100, Math.max(0, (elapsed / total) * 100)),
+                remaining: Math.max(0, endMinutes - currentMinutes)
+            };
+        }
+        
+        // Count completed pomodoros
+        function getCompletedPomodoros() {
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            let completed = 0;
+            
+            for (let activity of schedule) {
+                if (activity.type === 'pomodoro') {
+                    const endMinutes = timeToMinutes(activity.end);
+                    if (endMinutes <= currentMinutes) {
+                        completed++;
+                    }
+                }
+            }
+            
+            return completed;
+        }
+        
+        // Update clock display
+        function updateScheduleClock() {
+            const now = new Date();
+            
+            // Update digital clock
+            const clockElement = document.getElementById('digital-clock');
+            if (clockElement) {
+                clockElement.textContent = now.toLocaleTimeString('en-US', { 
+                    hour12: false, 
+                    hour: '2-digit', 
+                    minute: '2-digit', 
+                    second: '2-digit' 
+                });
+            }
+            
+            // Update date
+            const dateElement = document.getElementById('date-display');
+            if (dateElement) {
+                dateElement.textContent = now.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            }
+            
+            // Update current activity
+            const currentActivity = getCurrentActivity();
+            const activityIcon = document.getElementById('activity-icon');
+            const activityName = document.getElementById('current-activity');
+            const activityTimer = document.getElementById('activity-timer');
+            const activityProgressBar = document.getElementById('activity-progress');
+            
+            if (activityIcon) activityIcon.textContent = currentActivity.icon;
+            if (activityName) activityName.textContent = currentActivity.name;
+            
+            const progress = getActivityProgress(currentActivity);
+            if (activityProgressBar) {
+                activityProgressBar.style.width = `${progress.percentage}%`;
+            }
+            if (activityTimer) {
+                const remainingMins = Math.floor(progress.remaining);
+                const remainingSecs = Math.floor((progress.remaining - remainingMins) * 60);
+                activityTimer.textContent = `${remainingMins}:${remainingSecs.toString().padStart(2, '0')} left`;
+            }
+            
+            // Update next activity
+            const nextActivity = getNextActivity();
+            const nextActivityElement = document.getElementById('next-activity');
+            const nextTimeElement = document.getElementById('next-time');
+            
+            if (nextActivityElement) nextActivityElement.textContent = `${nextActivity.icon} ${nextActivity.name}`;
+            if (nextTimeElement) nextTimeElement.textContent = `in ${getTimeRemaining(nextActivity.start)}`;
+            
+            // Update day progress
+            const completed = getCompletedPomodoros();
+            const completedElement = document.getElementById('completed-pomodoros');
+            const dayProgressBar = document.getElementById('day-progress');
+            const totalDayElement = document.getElementById('total-day-pomodoros');
+            
+            if (completedElement) completedElement.textContent = completed;
+            if (totalDayElement) totalDayElement.textContent = '32';
+            if (dayProgressBar) dayProgressBar.style.width = `${(completed / 32) * 100}%`;
+            
+            // Update period stats
+            const morningCount = document.getElementById('morning-count');
+            const workCount = document.getElementById('work-count');
+            const eveningCount = document.getElementById('evening-count');
+            
+            let morningCompleted = 0, workCompleted = 0, eveningCompleted = 0;
+            
+            schedule.forEach(activity => {
+                if (activity.type === 'pomodoro' && timeToMinutes(activity.end) <= now.getHours() * 60 + now.getMinutes()) {
+                    const startHour = parseInt(activity.start.split(':')[0]);
+                    if (startHour >= 6 && startHour < 9) morningCompleted++;
+                    else if ((startHour === 9 && parseInt(activity.start.split(':')[1]) >= 10) || (startHour > 9 && startHour < 17)) workCompleted++;
+                    else if (startHour === 16 && parseInt(activity.start.split(':')[1]) >= 50) workCompleted++; // 16:50 block ends at 17:15
+                    else if (startHour >= 17) eveningCompleted++;
+                }
+            });
+            
+            if (morningCount) morningCount.textContent = `${morningCompleted}/6`;
+            if (workCount) workCount.textContent = `${workCompleted}/15`;
+            if (eveningCount) eveningCount.textContent = `${eveningCompleted}/11`;
+        }
+        
+        // Start the schedule clock
+        setInterval(updateScheduleClock, 1000);
+        updateScheduleClock();
+    </script>
+</body>
+</html>
