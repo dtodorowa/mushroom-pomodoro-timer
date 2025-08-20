@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import TimerWindow from './TimerWindow';
 import ScheduleWindow from './ScheduleWindow';
+import DayBreakdown from './DayBreakdown';
 import './PomodoroTimer.css';
 
 export default function PomodoroTimer() {
@@ -12,6 +13,7 @@ export default function PomodoroTimer() {
       <div className="cloud cloud2"></div>
       {/* <TimerWindow /> */}
       <ScheduleWindow />
+      <DayBreakdown />
     </div>
   );
 }

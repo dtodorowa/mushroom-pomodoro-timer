@@ -561,3 +561,147 @@
     color: #8a7a9a;
     text-transform: uppercase;
 }
+
+/* Day Breakdown Styles */
+.day-breakdown-container {
+    max-height: 600px;
+    overflow: hidden;
+}
+
+.breakdown-scroll {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-right: -10px;
+}
+
+.breakdown-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.breakdown-scroll::-webkit-scrollbar-track {
+    background: #e8d5f2;
+    border-radius: 4px;
+}
+
+.breakdown-scroll::-webkit-scrollbar-thumb {
+    background: #9b7aa8;
+    border-radius: 4px;
+}
+
+.breakdown-scroll::-webkit-scrollbar-thumb:hover {
+    background: #7a5a8a;
+}
+
+.breakdown-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 3px 0;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    font-size: 9px;
+}
+
+.breakdown-item.pending {
+    background: #f5e6ff;
+    color: #8a7a9a;
+    opacity: 0.7;
+}
+
+.breakdown-item.completed {
+    background: #e8f5e8;
+    color: #5a7a5a;
+    border-color: #9bb89b;
+}
+
+.breakdown-item.current {
+    background: linear-gradient(90deg, #87ceeb 0%, #6bb6d6 100%);
+    color: white;
+    border-color: #5a9ab8;
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+    50% { box-shadow: 0 6px 12px rgba(135, 206, 235, 0.4); }
+}
+
+.breakdown-item.pomodoro {
+    border-left: 4px solid #87ceeb;
+}
+
+.breakdown-item.break {
+    border-left: 4px solid #ffb5c5;
+}
+
+.breakdown-item.sleep {
+    border-left: 4px solid #b8a3d0;
+}
+
+.breakdown-item.pomodoro.completed {
+    border-left-color: #6bb6d6;
+}
+
+.breakdown-item.break.completed {
+    border-left-color: #ff9aaf;
+}
+
+.breakdown-item.sleep.completed {
+    border-left-color: #9b7aa8;
+}
+
+.breakdown-time {
+    min-width: 80px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: bold;
+    margin-right: 12px;
+}
+
+.start-time, .end-time {
+    font-size: 8px;
+    font-family: 'Press Start 2P', monospace;
+}
+
+.time-separator {
+    font-size: 6px;
+    opacity: 0.7;
+}
+
+.breakdown-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.breakdown-icon {
+    font-size: 14px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.breakdown-name {
+    font-size: 9px;
+    font-family: 'Press Start 2P', monospace;
+    text-transform: uppercase;
+    flex: 1;
+}
+
+.current-indicator {
+    font-size: 8px;
+    font-weight: bold;
+    color: #ffd93d;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+    animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.3; }
+}
