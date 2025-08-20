@@ -115,7 +115,7 @@ export default function ScheduleWindow() {
   const getCurrentActivity = (): ScheduleActivity => {
     const currentMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
     
-    for (let activity of schedule) {
+    for (const activity of schedule) {
       const startMinutes = timeToMinutes(activity.start);
       const endMinutes = timeToMinutes(activity.end);
       
@@ -180,7 +180,7 @@ export default function ScheduleWindow() {
     const currentMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
     let completed = 0;
     
-    for (let activity of schedule) {
+    for (const activity of schedule) {
       if (activity.type === 'pomodoro') {
         const endMinutes = timeToMinutes(activity.end);
         if (endMinutes <= currentMinutes) {
