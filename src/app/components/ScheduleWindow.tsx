@@ -235,8 +235,25 @@ export default function ScheduleWindow() {
 
   // Update every second
   useEffect(() => {
-    updateScheduleData();
-    const interval = setInterval(updateScheduleData, 1000);
+    const updateData = () => {
+      const now = new Date();
+      setCurrentTime(now);
+      
+      const current = getCurrentActivity();
+      const next = getNextActivity();
+      const progress = getActivityProgress(current);
+      const completed = getCompletedPomodoros();
+      const stats = getPeriodStats();
+      
+      setCurrentActivity(current);
+      setNextActivity(next);
+      setActivityProgress(progress);
+      setCompletedPomodoros(completed);
+      setPeriodStats(stats);
+    };
+
+    updateData();
+    const interval = setInterval(updateData, 1000);
     return () => clearInterval(interval);
   }, []);
 

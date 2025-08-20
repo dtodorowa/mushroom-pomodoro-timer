@@ -136,7 +136,21 @@ export default function DayBreakdown() {
     const updateTime = () => {
       const now = new Date();
       setCurrentTime(now);
-      setCurrentActivityIndex(getCurrentActivityIndex());
+      
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      
+      for (let i = 0; i < schedule.length; i++) {
+        const activity = schedule[i];
+        const startMinutes = timeToMinutes(activity.start);
+        const endMinutes = timeToMinutes(activity.end);
+        
+        if (startMinutes <= currentMinutes && currentMinutes < endMinutes) {
+          setCurrentActivityIndex(i);
+          return;
+        }
+      }
+      
+      setCurrentActivityIndex(-1);
     };
 
     updateTime();

@@ -705,3 +705,44 @@
     0%, 50% { opacity: 1; }
     51%, 100% { opacity: 0.3; }
 }
+
+/* Dashboard Timer Styles */
+.activity-info {
+    text-align: center;
+    margin: 15px 0;
+}
+
+.activity-type {
+    font-size: 11px;
+    color: #5a4a6a;
+    text-transform: uppercase;
+    font-family: 'Press Start 2P', monospace;
+    padding: 8px 16px;
+    background: #f5e6ff;
+    border: 2px solid #d4b5e0;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.schedule-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 15px;
+    background: #f5e6ff;
+    border: 3px solid #9b7aa8;
+    border-radius: 12px;
+}
+
+.time-range {
+    font-size: 12px;
+    color: #5a4a6a;
+    font-family: 'Press Start 2P', monospace;
+    text-transform: uppercase;
+}
+
+.activity-icon-large {
+    font-size: 32px;
+    animation: float-icon 3s infinite ease-in-out;
+}
